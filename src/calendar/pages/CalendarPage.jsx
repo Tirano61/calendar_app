@@ -8,6 +8,8 @@ import { NavBar, CalendarEvent, CalendrModal } from "../"
 import { useState } from 'react'
 import { useUiStore } from '../../hooks/useUiStore'
 import { useCalendarStore } from '../../hooks/useCalendarStore'
+import { FabAddNew } from '../components/FabAddNew';
+import { FabDelete } from '../components/FabDelete';
 
 
 const eventStyleGetter = (event, start, end, isSelected) => {
@@ -63,6 +65,8 @@ export const CalendarPage = () => {
         onView={ onViewChanged }
       />
       <CalendrModal />
+      <FabAddNew />
+      <FabDelete />
       
     </>
   )

@@ -1,5 +1,5 @@
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css'
 import Modal from 'react-modal';
@@ -8,6 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { addHours, differenceInSeconds } from 'date-fns';
 import es from 'date-fns/locale/es';
 import { useUiStore } from '../../hooks/useUiStore';
+import { useCalendarStore } from '../../hooks/useCalendarStore';
 
 registerLocale('es', es);
 
@@ -28,8 +29,9 @@ export const CalendrModal = () => {
 
   const { isDateModalOpen, closeDateModal } = useUiStore();
 
-  const [startDate, setStartDate] = useState(new Date());
   const [formSubmited, setFormSubmited] = useState(false);
+
+  const { activeEvent, startSavingEvent } = useCalendarStore();
 
   const [formValue, setFormValue] = useState({
     title: 'Dario',
@@ -40,36 +42,40 @@ export const CalendrModal = () => {
   });
 
   const titleClass = useMemo(() => {
-    if( !formSubmited ) return '';
-    return ( formValue.title.length > 0 )
+    if (!formSubmited) return '';
+    return (formValue.title.length > 0)
       ? 'is-valid'
       : 'is-invalid'
     
-
-  }, [ formValue.title, formSubmited ])
+  }, [formValue.title, formSubmited]);
+  useEffect(() => {
+    if ( activeEvent !== null ) {
+      setFormValue( { ...activeEvent } )
+    }
+  }, [ activeEvent ]);
+  
 
   const onCloseModal = () => {
     closeDateModal();
-  }
+  };
 
   const onInputChange = ({ target }) => {
     setFormValue({
       ...formValue,
       // cambia el solo el valor del input que haya echio el cambio  
       [target.name]: target.value
-
     })
-  }
-  const ondateChange = ( event, changing ) => {
+  };
 
+  const ondateChange = (event, changing) => {
     setFormValue({
       ...formValue,
-      [changing]: event  
+      [changing]: event
     })
 
-  }
+  };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
     setFormSubmited(true);
 
@@ -79,6 +85,10 @@ export const CalendrModal = () => {
       return;
     }
     if (formValue.title.length <= 0) return;
+
+    await startSavingEvent(formValue);
+    closeDateModal();
+    setFormSubmited(false);
 
   }
 
