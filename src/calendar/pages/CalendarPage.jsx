@@ -1,4 +1,5 @@
-import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
+import { useDispatch, useSelector } from 'react-redux';
+import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { addHours } from 'date-fns'
 
@@ -35,11 +36,13 @@ const eventStyleGetter = (event, start, end, isSelected) => {
 
 export const CalendarPage = () => {
   
+  const { onOpendateModal, onCloseDateModal } = useSelector(state => state.ui);
   const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'week');
+  const dispatch = useDispatch();
   
   const onDoubleClick = (event) => {
     console.log({ doubleClick: event });
-
+    dispatch(onOpenDateModal())
   }
   const onSelect = (event) => {
     console.log({ click: event });

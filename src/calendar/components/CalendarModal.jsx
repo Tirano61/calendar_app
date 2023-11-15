@@ -5,6 +5,8 @@ import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { addHours, differenceInSeconds } from 'date-fns';
 import es from 'date-fns/locale/es';
+import { useDispatch, useSelector } from 'react-redux';
+import { initializeUseSelector } from 'react-redux/es/hooks/useSelector';
 
 registerLocale('es', es);
 
@@ -23,6 +25,8 @@ Modal.setAppElement('#root');
 
 export const CalendrModal = () => {
 
+const dispach = useDispatch()
+  const { isDateModalOpen } = useSelector( state => state.ui );
   const [isOpen, setIsOpen] = useState(true);
   const [startDate, setStartDate] = useState(new Date());
 
@@ -63,12 +67,12 @@ export const CalendrModal = () => {
       return;
     }
     if (formValue.title.length <= 0) return;
-    
+
   }
 
   return (
     <Modal
-      isOpen={isOpen}
+      isOpen={ isDateModalOpen }
       onRequestClose={onCloseModal}
       style={customStyles}
       className='modal'
@@ -78,7 +82,7 @@ export const CalendrModal = () => {
       <h1> Nuevo evento </h1>
       <hr />
       <form className="container" onSubmit={onSubmit }>
-
+ 
         <div className="form-group mb-2 ">
           <label className='modal-label'>Fecha y hora inicio</label>
           <DatePicker
@@ -109,6 +113,7 @@ export const CalendrModal = () => {
         </div>
 
         <hr />
+        
         <div className="form-group mb-2">
           <label>Titulo y notas</label>
           <input
