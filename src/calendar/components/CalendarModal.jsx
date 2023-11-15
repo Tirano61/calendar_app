@@ -1,12 +1,13 @@
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css'
 import Modal from 'react-modal';
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { addHours, differenceInSeconds } from 'date-fns';
 import es from 'date-fns/locale/es';
-import { useDispatch, useSelector } from 'react-redux';
-import { initializeUseSelector } from 'react-redux/es/hooks/useSelector';
+import { useUiStore } from '../../hooks/useUiStore';
 
 registerLocale('es', es);
 
@@ -25,10 +26,10 @@ Modal.setAppElement('#root');
 
 export const CalendrModal = () => {
 
-const dispach = useDispatch()
-  const { isDateModalOpen } = useSelector( state => state.ui );
-  const [isOpen, setIsOpen] = useState(true);
+  const { isDateModalOpen, closeDateModal } = useUiStore();
+
   const [startDate, setStartDate] = useState(new Date());
+  const [formSubmited, setFormSubmited] = useState(false);
 
   const [formValue, setFormValue] = useState({
     title: 'Dario',
@@ -38,9 +39,17 @@ const dispach = useDispatch()
 
   });
 
+  const titleClass = useMemo(() => {
+    if( !formSubmited ) return '';
+    return ( formValue.title.length > 0 )
+      ? 'is-valid'
+      : 'is-invalid'
+    
+
+  }, [ formValue.title, formSubmited ])
+
   const onCloseModal = () => {
-    console.log('Cerrando modal');
-    setIsOpen(false);
+    closeDateModal();
   }
 
   const onInputChange = ({ target }) => {
@@ -62,8 +71,11 @@ const dispach = useDispatch()
 
   const onSubmit = (event) => {
     event.preventDefault();
+    setFormSubmited(true);
+
     const dif = differenceInSeconds(formValue.end, formValue.start);
     if (isNaN(dif) || dif <= 0) {
+      Swal.fire('Fechas incorrectas', 'Revisar las fechas ingresadas', 'error');
       return;
     }
     if (formValue.title.length <= 0) return;
@@ -118,7 +130,7 @@ const dispach = useDispatch()
           <label>Titulo y notas</label>
           <input
             type="text"
-            className="form-control"
+            className= { `form-control ${ titleClass }`} 
             placeholder="Título del evento"
             name="title"
             autoComplete="off"

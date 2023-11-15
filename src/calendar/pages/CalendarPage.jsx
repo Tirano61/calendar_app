@@ -6,19 +6,9 @@ import { addHours } from 'date-fns'
 import { localizer, getMessagesES } from '../../helpers'
 import { NavBar, CalendarEvent, CalendrModal } from "../"
 import { useState } from 'react'
+import { useUiStore } from '../../hooks/useUiStore'
+import { useCalendarStore } from '../../hooks/useCalendarStore'
 
-const events = [{
-  title: 'Cumpleños',
-  notes: 'Hay que comprar el pastel',
-  start: new Date(),
-  end: addHours(new Date(), 2),
-  bgColor: '#fafafa',
-  user: {
-    _id: '123',
-    name: 'Dario'
-  }
-
-}]
 
 const eventStyleGetter = (event, start, end, isSelected) => {
  
@@ -32,20 +22,20 @@ const eventStyleGetter = (event, start, end, isSelected) => {
   }
 }
 
-
-
 export const CalendarPage = () => {
+
+  const { openDateModal } = useUiStore();
+  const { events, setActiveEvent } = useCalendarStore();
   
   const { onOpendateModal, onCloseDateModal } = useSelector(state => state.ui);
   const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'week');
   const dispatch = useDispatch();
   
   const onDoubleClick = (event) => {
-    console.log({ doubleClick: event });
-    dispatch(onOpenDateModal())
+    openDateModal();
   }
   const onSelect = (event) => {
-    console.log({ click: event });
+    setActiveEvent( event );
   }
   const onViewChanged = (event) => {
     localStorage.setItem('lastView', event);
@@ -64,12 +54,12 @@ export const CalendarPage = () => {
         endAccessor="end"
         style={{ height: 'calc(100vh - 80px)' }}
         messages={getMessagesES()}
-        eventPropGetter={eventStyleGetter}
+        eventPropGetter={ eventStyleGetter }
         components={{
           event: CalendarEvent
         }}
-        onDoubleClickEvent={onDoubleClick}
-        onSelectEvent={onSelect}
+        onDoubleClickEvent={ onDoubleClick }
+        onSelectEvent={ onSelect }
         onView={ onViewChanged }
       />
       <CalendrModal />
