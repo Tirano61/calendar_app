@@ -26,6 +26,7 @@ export const calendarSlice = createSlice({
       activeEvent: null,
   },
   reducers: {
+    // eslint-disable-next-line no-unused-vars
     onEvents: ( state ) => {
       //state.events = state.events;
     },
