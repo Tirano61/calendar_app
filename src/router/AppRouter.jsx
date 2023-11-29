@@ -5,6 +5,7 @@ import { CalendarPage } from '../calendar';
 import { useAuthStore } from '../hooks';
 import { useEffect } from 'react';
 
+
 export const AppRouter = () => {
 
   //const auth_status = 'not-authenticated'; //'authenticated' 'not-authenticated'
@@ -19,7 +20,15 @@ export const AppRouter = () => {
 
   if( status === 'checking'){
     return (
-      <h3>Cargando...</h3>
+      <div style={{ display: "flex", 
+        alignItems: "center",
+        justifyContent: 'center',
+        height: "100vh",
+        width: "100dw"
+        
+      }}>
+        <h3  style={{ display: "flex", justifyContent: "center"}}>Cargando...</h3>
+      </div>
     )
   }
 
@@ -28,11 +37,20 @@ export const AppRouter = () => {
     <Routes>
       {
         ( status === 'not-authenticated')
-          ? <Route path='/auth/*' element={<LoginPage />} />
-          : <Route path='/*' element={<CalendarPage />} />
+          ? (
+              <>
+                <Route path='/auth/*' element={<LoginPage />} />
+                <Route path='/*' element={ <Navigate to={ '/auth/login'} /> } />
+              </>
+            )
+          :(
+            <>
+              <Route path='/' element={<CalendarPage />} />
+              <Route path='/*' element={ <Navigate to={ '/'} /> } />
+            </>
+          ) 
       }
       
-      <Route path='/*' element={ <Navigate to={ '/auth/login'} /> } />
     </Routes>
   )
 }

@@ -13,7 +13,7 @@ export const store = configureStore({
       serializableCheck: false,
     }),
   reducer:{
-    ui: uiSlice .reducer,
+    ui: uiSlice.reducer,
     calendar: calendarSlice.reducer,
     auth: authSlice.reducer,
   }

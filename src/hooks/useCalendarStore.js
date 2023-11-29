@@ -11,6 +11,27 @@ export const useCalendarStore = () => {
     dispatch(onSetActiveEvent(calendarEvent ) );
   }
 
+  /**
+   * * Si el evento tiene in _id hace el dispatch 
+   * ```
+   * onUpdateEvent({ ...calendarEvent })
+   * ```
+   * * Si no tiene _id crea hace el dispatch para crear un nuevo evento
+   * ```
+   * dispatch(onAddNewEvent({ ...calendarEvent, _id: new Date().getTime() })
+   * ```
+
+   * @param {any} calendarEvent 
+   * ```
+   * calendarEvent = {
+   *                 title: string;
+   *                 notes: string;
+   *                 start: Date;
+   *                 end: Date;
+   *               }
+   * 
+   * ```
+   */
   const startSavingEvent = async ( calendarEvent) => {
     //TODO: llegar al backend
 

@@ -13,8 +13,8 @@ const calendarApi = axios.create({
 
 // TODO: configurar interseptores
 calendarApi.interceptors.request.use( config => {
-  config.headers={
-    ...config,
+  config.headers = {
+    ...config.headers,
     'x-token': localStorage.getItem('token'),
   }
   return config;

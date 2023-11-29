@@ -21,6 +21,7 @@ export const useAuthStore = () => {
       dispatch( onLogin({ name: data.name, uid: data.uid }));
 
     } catch (error) {
+      console.log(error);
       dispatch( onLogOut( 'Credenciales incorrectas' ));
       setTimeout(()=>{
         dispatch(clearErrorMessage());
@@ -66,11 +67,17 @@ export const useAuthStore = () => {
       const { data } = await calendarApi.get( '/auth/renew' );
       localStorage.setItem( 'token-init-date', new Date().getTime() );
       localStorage.setItem('token', data.token);
+      dispatch( onLogin({ name: data.name, uid: data.uid }) )
     } catch (err) {
       console.log(err);
       localStorage.clear();
       dispatch( onLogOut() );
     }
+  }
+
+  const startLogOut = () => {
+    localStorage.clear();
+    dispatch(onLogOut());
   }
 
   return {
@@ -81,6 +88,7 @@ export const useAuthStore = () => {
     //* Metodos
     startLogin,
     startRegister,
-    checkAuthToken
+    checkAuthToken,
+    startLogOut
   }
 }
