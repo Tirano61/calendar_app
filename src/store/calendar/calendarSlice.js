@@ -1,6 +1,6 @@
 
 
-const tempEvent = {
+/* const tempEvent = {
   _id: new  Date().getTime(),
   title: 'Cumpleños',
   notes: 'Hay que comprar el pastel!!!',
@@ -11,7 +11,7 @@ const tempEvent = {
     _id: '123',
     name: 'Alfredo'
   }
-};
+}; */
 
 
 import { createSlice } from '@reduxjs/toolkit';
@@ -20,8 +20,9 @@ import { addHours } from 'date-fns';
 export const calendarSlice = createSlice({
   name: 'calendar',
   initialState: {
+    isLoadingEvents: true,
       events: [
-        tempEvent,
+        //tempEvent,
       ],
       activeEvent: null,
   },
@@ -31,7 +32,6 @@ export const calendarSlice = createSlice({
       //state.events = state.events;
     },
     onSetActiveEvent: ( state, { payload } ) => {
-      console.log(payload)
       state.activeEvent = payload;
     },
     onAddNewEvent: (state, { payload }) => {
@@ -40,7 +40,7 @@ export const calendarSlice = createSlice({
     },
     onUpdateEvent: (state, { payload }) => {
       state.events = state.events.map(event => {
-        if (event._id === payload._id) {
+        if (event.id === payload.id) {
           return payload;
         }
         return event;
@@ -48,13 +48,24 @@ export const calendarSlice = createSlice({
     },
     onDeleteEvent: (state) => {
       if ( state.activeEvent ) {
-        state.events = state.events.filter(event => event._id != state.activeEvent._id);
+        state.events = state.events.filter(event => event.id != state.activeEvent.id);
         state.activeEvent = null;
       }
+    },
+    onLoadEvents: ( state, { payload = [] }) => {
+      console.log(payload);
+      state.isLoadingEvents = false;
+      //state.events = payload;
+      payload.forEach( event => {
+        const exist = state.events.some( dbEvent => dbEvent.id === event.id );
+        if( !exist ){
+          state.events.push( event );
+        }
+      });
     }
   },
 });
 
 
 // Action creators are generated for each case reducer function
-export const { onEvents, onSetActiveEvent, onAddNewEvent, onUpdateEvent, onDeleteEvent } = calendarSlice.actions;
+export const { onEvents, onSetActiveEvent, onAddNewEvent, onUpdateEvent, onDeleteEvent, onLoadEvents } = calendarSlice.actions;
