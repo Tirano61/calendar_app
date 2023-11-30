@@ -11,7 +11,7 @@ import { FabAddNew } from '../components/FabAddNew';
 import { FabDelete } from '../components/FabDelete';
 
 
-const eventStyleGetter = (event, start, end, isSelected) => {
+const eventStyleGetter = (/* event, start, end, isSelected */) => {
  
   const style = {
     backgroundColor: '#34D0F7',
@@ -28,11 +28,11 @@ export const CalendarPage = () => {
   const { openDateModal } = useUiStore();
   const { events, setActiveEvent, startLoadingEvents } = useCalendarStore();
   
-  const { onOpendateModal, onCloseDateModal } = useSelector(state => state.ui);
+  // const { onOpendateModal, onCloseDateModal } = useSelector(state => state.ui);
   const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'week');
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   
-  const onDoubleClick = (event) => {
+  const onDoubleClick = () => {
     openDateModal();
   }
   const onSelect = (event) => {
