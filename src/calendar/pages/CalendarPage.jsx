@@ -1,11 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
+import { Calendar } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import { addHours } from 'date-fns'
 
 import { localizer, getMessagesES } from '../../helpers'
 import { NavBar, CalendarEvent, CalendrModal } from "../"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useUiStore } from '../../hooks/useUiStore'
 import { useCalendarStore } from '../../hooks/useCalendarStore'
 import { FabAddNew } from '../components/FabAddNew';
@@ -27,7 +26,7 @@ const eventStyleGetter = (event, start, end, isSelected) => {
 export const CalendarPage = () => {
 
   const { openDateModal } = useUiStore();
-  const { events, setActiveEvent } = useCalendarStore();
+  const { events, setActiveEvent, startLoadingEvents } = useCalendarStore();
   
   const { onOpendateModal, onCloseDateModal } = useSelector(state => state.ui);
   const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'week');
@@ -43,6 +42,11 @@ export const CalendarPage = () => {
     localStorage.setItem('lastView', event);
     setLastView(event);
   }
+
+  useEffect(() => {
+    startLoadingEvents();
+  }, [])
+  
 
   return (
     <>
