@@ -9,30 +9,36 @@ import { useUiStore } from '../../hooks/useUiStore'
 import { useCalendarStore } from '../../hooks/useCalendarStore'
 import { FabAddNew } from '../components/FabAddNew';
 import { FabDelete } from '../components/FabDelete';
+import { useAuthStore } from '../../hooks';
 
 
-const eventStyleGetter = (/* event, start, end, isSelected */) => {
- 
-  const style = {
-    backgroundColor: '#34D0F7',
-    borderRadius: '0px',
-    color: 'withe'
-  }
-  return {
-    style
-  }
-}
+
 
 export const CalendarPage = () => {
+  const { user } = useAuthStore();
+
+  const eventStyleGetter = (event, start, end, isSelected) => {
+
+    const isMyEvent = (user.uid === event.user._id ) || ( user.uid === event.user.uid );
+ 
+    const style = {
+      backgroundColor: isMyEvent ? '#34D0F7' : '#464660',
+      borderRadius: '0px',
+      color: 'withe'
+    }
+    return {
+      style
+    }
+  }
 
   const { openDateModal } = useUiStore();
   const { events, setActiveEvent, startLoadingEvents } = useCalendarStore();
   
-  // const { onOpendateModal, onCloseDateModal } = useSelector(state => state.ui);
+  const { onOpendateModal, onCloseDateModal } = useSelector(state => state.ui);
   const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'week');
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   
-  const onDoubleClick = () => {
+  const onDoubleClick = (event) => {
     openDateModal();
   }
   const onSelect = (event) => {

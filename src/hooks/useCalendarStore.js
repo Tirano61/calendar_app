@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { onAddNewEvent, onSetActiveEvent, onUpdateEvent, onDeleteEvent, onLoadEvents } from '../store/calendar/calendarSlice';
 import calendarApi from '../api/calendarApi';
 import { convertEventToDateEvent } from '../helpers';
+import { onLogOut } from '../store/auth/authSlice';
 
 export const useCalendarStore = () => {
   
@@ -55,9 +56,17 @@ export const useCalendarStore = () => {
     
   }
 
-  const startDeleteEvent = () => {
-    dispatch( onDeleteEvent() );
+  const startDeleteEvent = async() => {
+    try {
+      await calendarApi.delete(`/events/${ activeEvent.id }`);
+      
+      dispatch( onDeleteEvent() );
+    } catch (error) {
+      console.log(error);
+      Swal.fire('Error al eliminar',error.response.data.msg, 'error');
+    }
   }
+
   const startLoadingEvents = async() =>{
     try {
       const { data } = await calendarApi.get('/events');
@@ -81,6 +90,7 @@ export const useCalendarStore = () => {
     setActiveEvent,
     startSavingEvent,
     startDeleteEvent,
-    startLoadingEvents
+    startLoadingEvents,
+  
   }
 }
