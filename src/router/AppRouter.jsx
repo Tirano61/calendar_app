@@ -1,7 +1,7 @@
 
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { LoginPage } from '../auth';
-import { CalendarPage } from '../calendar';
+import { CalendarPage } from '../calendar/pages/CalendarPage';
 import { useAuthStore } from '../hooks';
 import { useEffect } from 'react';
 

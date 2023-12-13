@@ -9,6 +9,7 @@ import { addHours, differenceInSeconds } from 'date-fns';
 import es from 'date-fns/locale/es';
 import { useUiStore } from '../../hooks/useUiStore';
 import { useCalendarStore } from '../../hooks/useCalendarStore';
+import { getEnvVariables } from '../../helpers/getEnvVariables';
 
 registerLocale('es', es);
 
@@ -23,7 +24,10 @@ const customStyles = {
   },
 };
 
-Modal.setAppElement('#root');
+if (getEnvVariables().VITE_MODE !== 'test') {
+  
+  Modal.setAppElement('#root');
+}
 
 export const CalendrModal = () => {
 
